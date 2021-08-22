@@ -20,13 +20,10 @@ import pandas as pd
 import xarray as xr
 
 # + tags=[]
-montevideo = pd.read_csv('ARCAL_ISH/montevideo.csv', delimiter=';')
-montevideo = montevideo[(montevideo['date[yyyymmddHHMM]'] >= 201904031200) & (montevideo['date[yyyymmddHHMM]'] <= 202003090000)]
+montevideo = pd.read_csv('ARCAL_ISH/montevideo2.csv', delimiter=',')
+montevideo = montevideo[(montevideo['date[yyyymmddHHMM]'] >= 201904031200)]
 fechas = pd.read_csv('fechas.csv')
 fechas['montevideo'] = pd.to_datetime(fechas['montevideo'], format='%d/%m/%Y')
-display(fechas)
-display(montevideo)
-
 # Reemplazo los valores que son nan
 montevideo['wdir'] = montevideo['wdir'].where(montevideo['wdir'] < 999)
 montevideo['clht[km]'] = montevideo['clht[km]'].where(montevideo['clht[km]'] < 99)
@@ -44,26 +41,30 @@ montevideo['date'] = datetime
 cols = montevideo.columns.tolist()
 cols = cols[-1:] + cols[:-1] # Mando la última columna (date) al principio
 montevideo = montevideo[cols]
+display(montevideo)
+montevideo = montevideo.set_index('date')
 
 display(montevideo)
 
 # + tags=[]
-montevideo24hs_mean = montevideo.set_index('date')
-montevideo24hs_sum = montevideo.set_index('date')
+montevideo = montevideo.groupby(level=0).sum()
+display(montevideo)
 
-montevideo24hs_mean = montevideo24hs_mean.resample('24H', offset='12h').mean() # Resampleo para tener promedios diarios
+montevideo24hs_mean = montevideo.resample('24H', offset='12h').mean() # Resampleo para tener promedios diarios
 
-
-montevideo24hs_sum = montevideo24hs_sum.resample('24H', offset='12h').sum() # Resampleo para tener promedios diarios
-
+display(montevideo24hs_mean)
+montevideo24hs_sum = montevideo.resample('24H', offset='12h').sum() # Resampleo para tener promedios diarios
 
 montevideo_comb = pd.concat([montevideo24hs_mean[['wdir', 'wspd[m/s]', 'clht[km]', 'hzvs[km]', 'tmpd[C]',
                                           'slvp[hPa]', 'press[hPa]', 'sky[octas]', 'skyOpaque[octas]']],
                          montevideo24hs_sum[['prcp[mm]', 'prcpPeriod[hours]']]], axis=1)
 
-display(montevideo_comb.loc['2019-07-11 12:00:00'])
+display(montevideo_comb)
 montevideo_comb.index = montevideo_comb.index.normalize()
 montevideo_comb = (montevideo_comb.reindex(index = fechas['montevideo'].to_list()))
 montevideo_comb.to_excel('montevideo_meteo.xlsx')
 
 display(fechas['montevideo'])
+# -
+
+
