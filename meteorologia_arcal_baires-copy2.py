@@ -14,19 +14,18 @@
 #     name: python3
 # ---
 
-# + tags=[]
 import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 import xarray as xr
 
-ezeiza = pd.read_csv('ARCAL_ISH/ezeiza2.csv', delimiter=',') # ezeiza2 es abrir y volver a cerrar en excel para que ponga bien los delimiters, si no mezcla ; y ,
+# + tags=[]
+ezeiza = pd.read_csv('ARCAL_ISH/ezeiza.csv', delimiter=';') # ezeiza2 es abrir y volver a cerrar en excel para que ponga bien los delimiters, si no mezcla ; y ,
 ezeiza = ezeiza[(ezeiza['date[yyyymmddHHMM]'] >= 201904031200)]
 fechas = pd.read_csv('fechas.csv')
 fechas['ezeiza'] = pd.to_datetime(fechas['buenos_aires'], format='%d/%m/%Y')
 # Reemplazo los valores que son nan
 ezeiza['wdir'] = ezeiza['wdir'].where(ezeiza['wdir'] < 999)
-ezeiza['wspd[m/s]'] = ezeiza['wspd[m/s]'].where(ezeiza['wspd[m/s]'] < 999)
 ezeiza['clht[km]'] = ezeiza['clht[km]'].where(ezeiza['clht[km]'] < 99)
 ezeiza['dptp[C]'] = ezeiza['dptp[C]'].where(ezeiza['dptp[C]'] < 999)
 ezeiza['slvp[hPa]'] = ezeiza['slvp[hPa]'].where(ezeiza['slvp[hPa]'] < 9999)
@@ -57,25 +56,36 @@ cols = cols[-1:] + cols[:-1] # Mando la última columna (date) al principio
 ezeiza = ezeiza[cols]
 #display(ezeiza)
 ezeiza = ezeiza.set_index('date')
-
+#ezeiza['RH[%]'].plot()
+#plt.show()
 #display(ezeiza)
 
+
+plt.figure(figsize=[20,10])
+ezeiza_smn = pd.read_csv('/home/pablo/doctorado/arcal/proc_arcal/datos_horarios_extraidos.csv')
+ezeiza_smn['date'] = pd.to_datetime(ezeiza_smn['datetime'])
+ezeiza_smn = ezeiza_smn.set_index('date')
+ezeiza['RH[%]'].reindex(index = ezeiza_smn.index.to_list()).plot(style='o-')
+ezeiza_smn.rh.plot(style='x')
+# -
+
+plt.ylim([0,150])
+ezeiza['tmpd[C]'].plot(style='.')
+
+# + tags=[]
 ezeiza = ezeiza.groupby(level=0).sum()
-#display(ezeiza)
+display(ezeiza)
 
 ezeiza24hs_mean = ezeiza.resample('24H', offset='12h').mean() # Resampleo para tener promedios diarios
 
-#display(ezeiza24hs_mean)
+display(ezeiza24hs_mean)
 ezeiza24hs_sum = ezeiza.resample('24H', offset='12h').sum() # Resampleo para tener promedios diarios
 
 ezeiza_comb = pd.concat([ezeiza24hs_mean[['wdir', 'wspd[m/s]', 'clht[km]', 'hzvs[km]', 'tmpd[C]',
                                           'slvp[hPa]', 'press[hPa]', 'sky[octas]', 'skyOpaque[octas]', 'RH[%]']],
                          ezeiza24hs_sum[['prcp[mm]', 'prcpPeriod[hours]']]], axis=1)
 
-#display(ezeiza_comb)
+display(ezeiza_comb)
 ezeiza_comb.index = ezeiza_comb.index.normalize()
 ezeiza_comb = (ezeiza_comb.reindex(index = fechas['ezeiza'].to_list()))
 ezeiza_comb.to_excel('ezeiza_meteo2.xlsx')
-
-#with pd.
-#display(fechas['ezeiza'])

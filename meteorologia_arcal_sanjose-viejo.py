@@ -26,7 +26,6 @@ fechas = pd.read_csv('fechas.csv')
 fechas['sanjose'] = pd.to_datetime(fechas['sanjose'], format='%d/%m/%Y')
 # Reemplazo los valores que son nan
 sanjose['wdir'] = sanjose['wdir'].where(sanjose['wdir'] < 999)
-sanjose['wspd[m/s]'] = sanjose['wspd[m/s]'].where(sanjose['wspd[m/s]'] < 999)
 sanjose['clht[km]'] = sanjose['clht[km]'].where(sanjose['clht[km]'] < 99)
 sanjose['dptp[C]'] = sanjose['dptp[C]'].where(sanjose['dptp[C]'] < 999)
 sanjose['slvp[hPa]'] = sanjose['slvp[hPa]'].where(sanjose['slvp[hPa]'] < 9999)
@@ -34,19 +33,6 @@ sanjose['press[hPa]'] = sanjose['press[hPa]'].where(sanjose['press[hPa]'] < 9999
 sanjose['prcp[mm]'] = sanjose['prcp[mm]'].where(sanjose['prcp[mm]'] < 999)
 sanjose['sky[octas]'] = sanjose['sky[octas]'].where(sanjose['sky[octas]'] > 99)
 sanjose['skyOpaque[octas]'] = sanjose['skyOpaque[octas]'].where(sanjose['skyOpaque[octas]'] < 99)
-sanjose['tmpd[C]'] = sanjose['tmpd[C]'].where(sanjose['tmpd[C]'] < 99)
-
-# Calculo RH como rh=100*(EXP((17.625*d)/(243.04+d))/EXP((17.625*t)/(243.04+t)));
-# donde d=dewpoint (dptp) y t=dry temp (tmpd), aprox de August-Roche-Magnus
-d = sanjose['dptp[C]']
-t = sanjose['tmpd[C]']
-sanjose['RH[%]'] = 100 * (np.exp((17.625 * d)/(243.04 + d)) / np.exp((17.625 * t)/(243.04 + t)))
-# 
-
-#Promedio fechas que están dobles
-sanjose = sanjose.groupby('date[yyyymmddHHMM]').mean().reset_index()
-
-
 
 # Parsing de fecha
 datetime = pd.to_datetime(sanjose['date[yyyymmddHHMM]'], format='%Y%m%d%H%M')
@@ -55,28 +41,27 @@ sanjose['date'] = datetime
 cols = sanjose.columns.tolist()
 cols = cols[-1:] + cols[:-1] # Mando la última columna (date) al principio
 sanjose = sanjose[cols]
-#display(sanjose)
+display(sanjose)
 sanjose = sanjose.set_index('date')
 
-#display(sanjose)
+display(sanjose)
 
 # + tags=[]
 sanjose = sanjose.groupby(level=0).sum()
-#display(sanjose)
+display(sanjose)
 
 sanjose24hs_mean = sanjose.resample('24H', offset='12h').mean() # Resampleo para tener promedios diarios
 
-#display(sanjose24hs_mean)
+display(sanjose24hs_mean)
 sanjose24hs_sum = sanjose.resample('24H', offset='12h').sum() # Resampleo para tener promedios diarios
 
 sanjose_comb = pd.concat([sanjose24hs_mean[['wdir', 'wspd[m/s]', 'clht[km]', 'hzvs[km]', 'tmpd[C]',
-                                          'slvp[hPa]', 'press[hPa]', 'sky[octas]', 'skyOpaque[octas]', 'RH[%]']],
+                                          'slvp[hPa]', 'press[hPa]', 'sky[octas]', 'skyOpaque[octas]']],
                          sanjose24hs_sum[['prcp[mm]', 'prcpPeriod[hours]']]], axis=1)
 
-#display(sanjose_comb)
+display(sanjose_comb)
 sanjose_comb.index = sanjose_comb.index.normalize()
 sanjose_comb = (sanjose_comb.reindex(index = fechas['sanjose'].to_list()))
-sanjose_comb.to_excel('sanjose_meteo2.xlsx')
+sanjose_comb.to_excel('sanjose_meteo.xlsx')
 
-#with pd.
-#display(fechas['sanjose'])
+display(fechas['sanjose'])
