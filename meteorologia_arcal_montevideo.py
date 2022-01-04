@@ -26,6 +26,7 @@ fechas = pd.read_csv('fechas.csv')
 fechas['montevideo'] = pd.to_datetime(fechas['montevideo'], format='%d/%m/%Y')
 # Reemplazo los valores que son nan
 montevideo['wdir'] = montevideo['wdir'].where(montevideo['wdir'] < 999)
+montevideo['wspd[m/s]'] = montevideo['wspd[m/s]'].where(montevideo['wspd[m/s]'] < 999)
 montevideo['clht[km]'] = montevideo['clht[km]'].where(montevideo['clht[km]'] < 99)
 montevideo['dptp[C]'] = montevideo['dptp[C]'].where(montevideo['dptp[C]'] < 999)
 montevideo['slvp[hPa]'] = montevideo['slvp[hPa]'].where(montevideo['slvp[hPa]'] < 9999)
