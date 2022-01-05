@@ -18,7 +18,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 
-# + jupyter={"outputs_hidden": true} tags=[]
+# + tags=[] jupyter={"outputs_hidden": true}
 uruguay = pd.read_excel('Base de datos OC-EC Arcal_conmeteo_proc.xlsx', sheet_name='Uruguay')
 #uruguay['tmpd[C]'].plot()
 #plt.show()
@@ -29,9 +29,12 @@ for j in ['tmpd[C]', 'RH[%]', 'wspd[m/s]']:
         plt.ylabel(i)
         plt.xlabel(j)
         plt.title('Montevideo')
+        plt.savefig('correlaciones_meteo/Uruguay/Montevideo_' +
+                    i.replace('/', '_') + '_' + j.replace('/', '_') +
+                    '.pdf')
         plt.show()
 
-# + jupyter={"outputs_hidden": true} tags=[]
+# + tags=[] jupyter={"outputs_hidden": true}
 san_jose = pd.read_excel('Base de datos OC-EC Arcal_conmeteo_proc.xlsx', sheet_name='Costa Rica')
 #san_jose['tmpd[C]'].plot()
 #plt.show()
@@ -42,9 +45,12 @@ for j in ['tmpd[C]', 'RH[%]', 'wspd[m/s]']:
         plt.ylabel(i)
         plt.xlabel(j)
         plt.title('San José')
+        plt.savefig('correlaciones_meteo/CostaRica/SanJose' +
+                    i.replace('/', '_') + '_' + j.replace('/', '_') +
+                    '.pdf')
         plt.show()
 
-# + jupyter={"outputs_hidden": true} tags=[]
+# + tags=[] jupyter={"outputs_hidden": true}
 quito = pd.read_excel('Base de datos OC-EC Arcal_conmeteo_proc.xlsx', sheet_name='Ecuador')
 #quito['tmpd[C]'].plot()
 #plt.show()
@@ -55,9 +61,12 @@ for j in ['tmpd[C]', 'RH[%]', 'wspd[m/s]']:
         plt.ylabel(i)
         plt.xlabel(j)
         plt.title('Quito')
+        plt.savefig('correlaciones_meteo/Ecuador/Quito' +
+                    i.replace('/', '_') + '_' + j.replace('/', '_') +
+                    '.pdf')
         plt.show()
 
-# + jupyter={"outputs_hidden": true} tags=[]
+# + tags=[] jupyter={"outputs_hidden": true}
 ezeiza = pd.read_excel('Base de datos OC-EC Arcal_conmeteo_proc.xlsx', sheet_name='Argentina')
 #ezeiza['tmpd[C]'].plot()
 #plt.show()
@@ -68,9 +77,12 @@ for j in ['tmpd[C]', 'RH[%]', 'wspd[m/s]']:
         plt.ylabel(i)
         plt.xlabel(j)
         plt.title('Buenos Aires')
+        plt.savefig('correlaciones_meteo/Argentina/BuenosAires' +
+                    i.replace('/', '_') + '_' + j.replace('/', '_') +
+                    '.pdf')
         plt.show()
 
-# + jupyter={"outputs_hidden": true} tags=[]
+# + tags=[] jupyter={"outputs_hidden": true}
 medellin = pd.read_excel('Base de datos OC-EC Arcal_conmeteo_proc.xlsx', sheet_name='Colombia')
 #medellin['tmpd[C]'].plot()
 #plt.show()
@@ -81,9 +93,12 @@ for j in ['tmpd[C]', 'RH[%]', 'wspd[m/s]']:
         plt.ylabel(i)
         plt.xlabel(j)
         plt.title('Medellín')
+        plt.savefig('correlaciones_meteo/Colombia/Medellin' +
+                    i.replace('/', '_') + '_' + j.replace('/', '_') +
+                    '.pdf')
         plt.show()
 
-# + tags=[]
+# + tags=[] jupyter={"outputs_hidden": true}
 saopaulo = pd.read_excel('Base de datos OC-EC Arcal_conmeteo_proc.xlsx', sheet_name='Brasil')
 #saopaulo['tmpd[C]'].plot()
 #plt.show()
@@ -94,4 +109,7 @@ for j in ['tmpd[C]', 'RH[%]', 'wspd[m/s]']:
         plt.ylabel(i)
         plt.xlabel(j)
         plt.title('Sao Paulo')
+        plt.savefig('correlaciones_meteo/Brasil/SaoPaulo' +
+                    i.replace('/', '_') + '_' + j.replace('/', '_') +
+                    '.pdf')
         plt.show()
