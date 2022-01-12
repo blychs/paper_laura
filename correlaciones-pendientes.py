@@ -7,7 +7,7 @@
 #       extension: .py
 #       format_name: light
 #       format_version: '1.5'
-#       jupytext_version: 1.10.2
+#       jupytext_version: 1.7.1
 #   kernelspec:
 #     display_name: Python 3
 #     language: python
@@ -19,7 +19,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import stats
 
-# + tags=[] jupyter={"source_hidden": true}
+# + tags=[]
 resultados = pd.DataFrame()
 
 uruguay = pd.read_excel('Base de datos OC-EC Arcal_conmeteo_proc.xlsx', sheet_name='Uruguay')
